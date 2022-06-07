@@ -1,0 +1,46 @@
+---
+version: '2'
+services:
+
+  #https://hub.docker.com/r/sonatype/nexus3/
+  nexus:
+    image: sonatype/nexus3:3.38.1
+    volumes:
+      - nexus-data:/nexus-data
+    ports:
+      - "8081:8081"
+    networks:
+      - multi-compose-net
+      - external-compose-net
+    environment:
+      - INSTALL4J_ADD_VM_PARAMS=-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk11
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    networks:
+      - multi-compose-net
+      - external-compose-net
+    environment:
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_TLS_VERIFY=0
+
+volumes:
+  nexus-data:
+    driver: local
+  jenkins-data:
+    driver: local
+  jenkins-docker-certs:
+    driver: local    
+
+networks:
+  multi-compose-net:
+    driver: bridge
+  external-compose-net:
+    external: true
