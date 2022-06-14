@@ -16,7 +16,9 @@ Run the shell script
 
 You should have a result like this
 
- - [x] .......
+ - [x] + docker-compose up -d --build --force-recreate
+ - [x] Creating dockerjenkinsnexus_nexus_1   ... done
+ - [x] Creating dockerjenkinsnexus_jenkins_1 ... done
 
 ## Access the Jenkins webserver
 
